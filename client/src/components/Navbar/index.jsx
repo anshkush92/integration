@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
+import { useSelector } from 'react-redux';
+
 import Cart from '../Cart';
 
 const Navbar = () => {
   const [isDropdownShown, setIsDropdownShown] = useState(false);
+
+  const { totalQuantity } = useSelector((state) => state.cart);
 
   const toggleDropdown = () => {
     setIsDropdownShown((previousState) => !previousState);
@@ -46,9 +50,15 @@ const Navbar = () => {
               <div
                 className={`z-10 ${
                   isDropdownShown ? 'flex' : 'hidden'
-                } font-normal bg-white divide-y divide-gray-100 rounded shadow px-1 w-80 dark:bg-gray-700 dark:divide-gray-600 absolute`}
+                } font-normal bg-white divide-y divide-gray-100 rounded shadow px-1   ${
+                  totalQuantity ? 'w-80' : 'w-auto'
+                }dark:bg-gray-700 dark:divide-gray-600 absolute`}
               >
-                <ul className="py-1 max-h-[32rem] text-sm text-gray-700 dark:text-gray-400 overflow-y-scroll">
+                <ul
+                  className={`py-1 max-w-80 max-h-[32rem] text-sm text-gray-700 dark:text-gray-400 ${
+                    totalQuantity ? 'overflow-y-scroll' : 'overflow-y-auto'
+                  }`}
+                >
                   <Cart />
                 </ul>
               </div>
