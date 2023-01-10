@@ -9,6 +9,7 @@ const initialState = {
    */
   items: [],
   totalQuantity: 0,
+  totalPrice: 0,
 };
 
 export const cartSlice = createSlice({
@@ -24,8 +25,10 @@ export const cartSlice = createSlice({
        */
       if (existingItem === -1) {
         state.items.push({ id, title, price, quantity: 1, image });
+        state.totalPrice += price;
       } else {
         state.items[existingItem].quantity++;
+        state.totalPrice += price;
       }
 
       state.totalQuantity = state.items.length;
@@ -42,9 +45,11 @@ export const cartSlice = createSlice({
       if (existingItem === -1) {
         return;
       } else if (state.items[existingItem].quantity === 1) {
+        state.totalPrice -= state.items[existingItem].price;
         state.items.splice(existingItem, 1);
       } else {
         state.items[existingItem].quantity--;
+        state.totalPrice -= state.items[existingItem].price;
       }
 
       state.totalQuantity = state.items.length;

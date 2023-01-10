@@ -4,7 +4,9 @@ import { useSelector } from 'react-redux';
 
 import CartItem from './CartItem';
 const Cart = () => {
-  const { items, totalQuantity } = useSelector((state) => state.cart);
+  const { items, totalQuantity, totalPrice } = useSelector(
+    (state) => state.cart
+  );
   console.log('🚀 ~ file: index.jsx:8 ~ Cart ~ items', items);
 
   return (
@@ -18,7 +20,7 @@ const Cart = () => {
           Total Items: <span className="text-red-500">{totalQuantity}</span>
         </div>
         <div>
-          Total: <span className="text-red-500">$ 5000</span>
+          Total: <span className="text-red-500">$ {totalPrice.toFixed(2)}</span>
         </div>
         <button className="bg-black py-2 rounded-md text-white w-full">
           Checkout

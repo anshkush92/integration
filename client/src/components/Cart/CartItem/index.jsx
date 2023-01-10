@@ -21,10 +21,7 @@ const CartItem = ({ id, title, price, image, quantity }) => {
             onClick={() =>
               dispatch(
                 decreaseItem({
-                  id: id,
-                  price: price,
-                  title: title,
-                  image: image,
+                  id,
                 })
               )
             }
@@ -37,10 +34,9 @@ const CartItem = ({ id, title, price, image, quantity }) => {
             onClick={() =>
               dispatch(
                 increaseItem({
-                  id: id,
-                  price: price,
-                  title: title,
-                  image: image,
+                  id,
+                  title,
+                  price,
                 })
               )
             }
