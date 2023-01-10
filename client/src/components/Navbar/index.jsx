@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import Cart from '../Cart';
+
 const Navbar = () => {
   const [isDropdownShown, setIsDropdownShown] = useState(false);
 
@@ -44,10 +46,22 @@ const Navbar = () => {
               <div
                 className={`z-10 ${
                   isDropdownShown ? 'flex' : 'hidden'
-                } font-normal bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600 absolute`}
+                } font-normal bg-white divide-y divide-gray-100 rounded shadow px-1 w-80 dark:bg-gray-700 dark:divide-gray-600 absolute`}
               >
-                <ul className="py-1 text-sm text-gray-700 dark:text-gray-400">
-                  <li>hello</li>
+                <ul className="py-1 max-h-[32rem] text-sm text-gray-700 dark:text-gray-400 overflow-y-scroll">
+                  <Cart />
+
+                  <div className="flex flex-col gap-y-2 my-2">
+                    <div>
+                      Total Items: <span className="text-red-500">10</span>
+                    </div>
+                    <div>
+                      Total: <span className="text-red-500">$ 5000</span>
+                    </div>
+                    <button className="bg-black py-2 rounded-md text-white w-full">
+                      Checkout
+                    </button>
+                  </div>
                 </ul>
               </div>
             </li>
