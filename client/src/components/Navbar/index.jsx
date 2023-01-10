@@ -55,12 +55,12 @@ const Navbar = () => {
             </li>
             <li>
               <a href="/#" className="navbar-buttons">
-                Cart Items: 0
+                Newsletter
               </a>
             </li>
             <li>
               <a href="/#" className="navbar-buttons">
-                Total: 0
+                OTP Authentication
               </a>
             </li>
           </ul>

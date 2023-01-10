@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 import { increaseItem } from '../../features/cart/cartSlice';
@@ -10,7 +11,7 @@ const Card = (props) => {
 
   const addToCart = () => {
     dispatch(increaseItem({ id, title, price, image }));
-    console.log(`Added to cart ${title}`);
+    toast.success(`Added to cart - ${title}`);
   };
 
   return (
