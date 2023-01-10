@@ -17,15 +17,10 @@ function App() {
     <div className="px-4">
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
-        newestOnTop={false}
         closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
         draggable
-        pauseOnHover
-        theme="light"
       />
       <Navbar />
       <div className="mt-8 mx-auto grid gap-y-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
