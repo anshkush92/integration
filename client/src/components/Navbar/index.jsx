@@ -50,18 +50,6 @@ const Navbar = () => {
               >
                 <ul className="py-1 max-h-[32rem] text-sm text-gray-700 dark:text-gray-400 overflow-y-scroll">
                   <Cart />
-
-                  <div className="flex flex-col gap-y-2 my-2">
-                    <div>
-                      Total Items: <span className="text-red-500">10</span>
-                    </div>
-                    <div>
-                      Total: <span className="text-red-500">$ 5000</span>
-                    </div>
-                    <button className="bg-black py-2 rounded-md text-white w-full">
-                      Checkout
-                    </button>
-                  </div>
                 </ul>
               </div>
             </li>

@@ -9,7 +9,7 @@ const Card = (props) => {
   const dispatch = useDispatch();
 
   const addToCart = () => {
-    dispatch(increaseItem({ id, title, price }));
+    dispatch(increaseItem({ id, title, price, image }));
     console.log(`Added to cart ${title}`);
   };
 

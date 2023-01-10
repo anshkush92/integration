@@ -16,14 +16,14 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     increaseItem: (state, action) => {
-      const { id, title, price } = action.payload;
+      const { id, title, price, image } = action.payload;
       const existingItem = state.items.findIndex((item) => item.id === id);
 
       /**
        * @description - If items doesn't exsist then enter the item, otherwise only increase the quantity
        */
       if (existingItem === -1) {
-        state.items.push({ id, title, price, quantity: 1 });
+        state.items.push({ id, title, price, quantity: 1, image });
       } else {
         state.items[existingItem].quantity++;
       }
