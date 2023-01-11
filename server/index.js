@@ -19,6 +19,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/auth', require('./routes/auth.route'));
+app.use(require('./routes/home.route'));
+
 /**
  * @description - Loading all relevant environment variables
  */
