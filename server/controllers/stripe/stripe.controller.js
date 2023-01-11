@@ -1,6 +1,9 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const PORT = process.env.PORT || 8000;
+console.log('🚀 ~ file: stripe.controller.js:4 ~ PORT', PORT);
+const CLIENT_URL = process.env.CLIENT_URL;
+console.log('🚀 ~ file: stripe.controller.js:6 ~ CLIENT_URL', CLIENT_URL);
 
 const createCheckoutSession = async (req, res) => {
   const session = await stripe.checkout.sessions.create({
