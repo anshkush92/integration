@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
+import { NavLink } from 'react-router-dom';
+
 import Cart from '../Cart';
 
 const Navbar = () => {
@@ -13,10 +15,19 @@ const Navbar = () => {
     setIsDropdownShown((previousState) => !previousState);
   };
 
+  const activeStyle = {
+    textDecoration: 'underline',
+    color: 'red',
+  };
+
   return (
     <nav className="px-2 bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
-        <a href="/#" className="flex items-center">
+        <NavLink
+          to="/"
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
+          className="flex items-center"
+        >
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="h-6 mr-3 sm:h-10"
@@ -25,7 +36,7 @@ const Navbar = () => {
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
             Integration
           </span>
-        </a>
+        </NavLink>
 
         {/* Cart Navbar button */}
         <div className="hidden w-full md:block md:w-auto">
@@ -64,14 +75,22 @@ const Navbar = () => {
               </div>
             </li>
             <li>
-              <a href="/#" className="navbar-buttons">
+              <NavLink
+                to="/newsletter"
+                style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                className="navbar-buttons"
+              >
                 Newsletter
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/#" className="navbar-buttons">
+              <NavLink
+                to="/auth/login"
+                style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                className="navbar-buttons"
+              >
                 OTP Authentication
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>
