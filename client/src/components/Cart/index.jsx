@@ -12,8 +12,17 @@ const Cart = () => {
   );
   console.log('🚀 ~ file: index.jsx:8 ~ Cart ~ items', items);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('🚀 ~ file: index.jsx:16 ~ handleSubmit ~ event', event);
+  };
+
   return (
-    <form action={`${REQUEST_URL}/create-checkout-session`}>
+    <form
+      onSubmit={(e) => handleSubmit(e)}
+      action={`${REQUEST_URL}/create-checkout-session`}
+      method="POST"
+    >
       {items.map((item) => (
         <CartItem key={item.id} {...item} />
       ))}
