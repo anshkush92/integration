@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
-router.post('/sendgrid', (req, res) => {
-  res.json({ message: 'Hello from SendGrid', data: req.body });
-});
+const { sendEmail } = require('../controllers/sendgrid/sendgrid.controller');
+
+router.post('/sendgrid', sendEmail);
 
 module.exports = router;
