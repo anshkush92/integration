@@ -2,6 +2,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const PORT = process.env.PORT || 8000;
 const CLIENT_URL = process.env.CLIENT_URL;
+const TEMP_MAIL = 'haseb98364@tohup.com';
 
 const createCheckoutSession = async (req, res) => {
   const cartItems = req.body?.cartItems;
@@ -62,6 +63,7 @@ const createCheckoutSession = async (req, res) => {
       enabled: true,
     },
     line_items: lineItems,
+    customer_email: TEMP_MAIL,
     mode: 'payment',
     success_url: `${CLIENT_URL}/success`,
     cancel_url: `${CLIENT_URL}/cancel`,
