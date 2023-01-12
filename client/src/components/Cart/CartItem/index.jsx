@@ -27,11 +27,11 @@ const CartItem = ({ id, title, price, image, quantity }) => {
         <div className="flex flex-col px-2 items-center">
           <div className="text-xs">{title}</div>
           <div className="flex gap-x-2 items-center">
-            <button className="text-xl" onClick={decrease}>
+            <button type="button" className="text-xl" onClick={decrease}>
               -
             </button>
             <span className="text-xl">{quantity}</span>
-            <button className="text-xl" onClick={increase}>
+            <button type="button" className="text-xl" onClick={increase}>
               +
             </button>
           </div>
