@@ -14,7 +14,6 @@ const Cart = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const response = await fetch(`${REQUEST_URL}/create-checkout-session`, {
       method: 'POST',
       headers: {
@@ -26,6 +25,14 @@ const Cart = () => {
     // Getting the response from the server
     const data = await response.json();
     console.log('🚀 ~ file: index.jsx:24 ~ handleSubmit ~ data', data);
+
+    const { url } = data;
+
+    if (url) {
+      window.location.href = url;
+    } else {
+      alert('Something went wrong, please try again later');
+    }
   };
 
   return (

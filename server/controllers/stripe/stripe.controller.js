@@ -1,35 +1,42 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const PORT = process.env.PORT || 8000;
-console.log('🚀 ~ file: stripe.controller.js:4 ~ PORT', PORT);
 const CLIENT_URL = process.env.CLIENT_URL;
-console.log('🚀 ~ file: stripe.controller.js:6 ~ CLIENT_URL', CLIENT_URL);
 
 const createCheckoutSession = async (req, res) => {
-  console.log(
-    '🚀 ~ file: stripe.controller.js:10 ~ createCheckoutSession ~ cartItems',
-    req.body
-  );
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: [
-      {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'T-shirt',
+  const cartItems = req.body?.cartItems;
+  const lineItems = cartItems.map((item) => {
+    return {
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.title,
+          images: [item.image],
+          metadata: {
+            id: item.id,
           },
-          unit_amount: 2000,
         },
-        quantity: 1,
+        unit_amount: item.price * 100,
       },
-    ],
-    mode: 'payment',
-    success_url: `http://localhost:${PORT}/success`,
-    cancel_url: `http://localhost:${PORT}/cancel`,
+      quantity: item.quantity,
+    };
   });
 
-  res.status(200).json({ url: session.url, data: req.body });
+  console.log(
+    '🚀 ~ file: stripe.controller.js:8 ~ createCheckoutSession ~ cartItems',
+    cartItems,
+    lineItems
+  );
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: lineItems,
+    mode: 'payment',
+    success_url: `${CLIENT_URL}/success`,
+    cancel_url: `${CLIENT_URL}/cancel`,
+  });
+
+  res.status(200).json({ url: session.url, cartItems: cartItems });
 };
 
 const success = async (req, res) => {
