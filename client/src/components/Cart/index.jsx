@@ -14,6 +14,7 @@ const Cart = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log('🚀 ~ file: index.jsx:8 ~ Cart ~ items', items);
     console.log('🚀 ~ file: index.jsx:16 ~ handleSubmit ~ event', event);
   };
 
