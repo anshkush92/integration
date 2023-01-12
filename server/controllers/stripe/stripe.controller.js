@@ -6,6 +6,10 @@ const CLIENT_URL = process.env.CLIENT_URL;
 console.log('🚀 ~ file: stripe.controller.js:6 ~ CLIENT_URL', CLIENT_URL);
 
 const createCheckoutSession = async (req, res) => {
+  console.log(
+    '🚀 ~ file: stripe.controller.js:10 ~ createCheckoutSession ~ cartItems',
+    req.body
+  );
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: [
@@ -25,7 +29,7 @@ const createCheckoutSession = async (req, res) => {
     cancel_url: `http://localhost:${PORT}/cancel`,
   });
 
-  res.redirect(303, session.url);
+  res.status(200).json({ url: session.url, data: req.body });
 };
 
 const success = async (req, res) => {

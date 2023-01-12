@@ -12,18 +12,24 @@ const Cart = () => {
   );
   console.log('🚀 ~ file: index.jsx:8 ~ Cart ~ items', items);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('🚀 ~ file: index.jsx:8 ~ Cart ~ items', items);
-    console.log('🚀 ~ file: index.jsx:16 ~ handleSubmit ~ event', event);
+
+    const response = await fetch(`${REQUEST_URL}/create-checkout-session`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ cartItems: items }),
+    });
+
+    // Getting the response from the server
+    const data = await response.json();
+    console.log('🚀 ~ file: index.jsx:24 ~ handleSubmit ~ data', data);
   };
 
   return (
-    <form
-      onSubmit={(e) => handleSubmit(e)}
-      action={`${REQUEST_URL}/create-checkout-session`}
-      method="POST"
-    >
+    <form onSubmit={(event) => handleSubmit(event)}>
       {items.map((item) => (
         <CartItem key={item.id} {...item} />
       ))}
