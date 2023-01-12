@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
  */
 app.use(require('./routes/home.route'));
 app.use(require('./routes/stripe.route'));
+app.use(require('./routes/sendgrid.route'));
 app.use('/auth', require('./routes/auth.route'));
 
 /**
