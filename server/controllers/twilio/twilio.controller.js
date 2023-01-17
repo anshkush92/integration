@@ -13,7 +13,7 @@ const SMS_SECRET_KEY = process.env.SMS_SECRET_KEY;
 const client = require('twilio')(ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+
 let refreshTokens = [];
 
 /**
@@ -104,7 +104,7 @@ const verifyOtp = async (req, res) => {
       expiresIn: '30s',
     });
     const refreshToken = jwt.sign({ phoneNumber }, JWT_REFRESH_TOKEN, {
-      expiresIn: '1m',
+      expiresIn: '1y',
     });
 
     refreshTokens.push(refreshToken);

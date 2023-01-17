@@ -12,9 +12,18 @@ const LoginPage = () => {
     setIsOtpSend(true);
   };
 
+  const handleOtpVerify = (event, currentOtp) => {
+    event.preventDefault();
+    if (event.target.id === 'otp-form-back') setIsOtpSend(false);
+  };
+
   return (
     <div>
-      {isOtpSend ? <OtpForm /> : <LoginPhone handleOtpSend={handleOtpSend} />}
+      {isOtpSend ? (
+        <OtpForm handleOtpVerify={handleOtpVerify} />
+      ) : (
+        <LoginPhone handleOtpSend={handleOtpSend} />
+      )}
     </div>
   );
 };
