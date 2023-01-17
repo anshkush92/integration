@@ -12,6 +12,7 @@ const LoginPhone = ({ handleOtpSend }) => {
           className="input-form mb-4"
           onChange={(event) => setCurrentPhoneNumber(event.target.value)}
           value={currentPhoneNumber}
+          placeholder="+911234567890"
           id="phone-number"
         />
 
