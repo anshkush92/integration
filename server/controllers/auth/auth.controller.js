@@ -9,11 +9,11 @@ const register = async (req, res) => {
 const logout = async (req, res) => {
   res
     .status(201)
-    .json({ message: 'Logout Route' })
     .clearCookie('accessToken')
     .clearCookie('refreshToken')
     .clearCookie('authSession')
-    .clearCookie('refreshTokenId');
+    .clearCookie('refreshTokenId')
+    .json({ message: 'Logout Route' });
 };
 
 module.exports = {

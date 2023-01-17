@@ -119,12 +119,12 @@ const verifyOtp = async (req, res) => {
         expires: new Date(new Date().getTime() + 30 * 1000),
       })
       .cookie('refreshToken', refreshToken, {
-        expires: new Date(new Date().getTime() + 30 * 1000),
+        expires: new Date(new Date().getTime() + 3000 * 1000),
         sameSite: 'strict',
         httpOnly: true,
       })
       .cookie('refreshTokenId', true, {
-        expires: new Date(new Date().getTime() + 30 * 1000),
+        expires: new Date(new Date().getTime() + 3000 * 1000),
       })
       .json({
         message: 'OTP is correct',
@@ -152,6 +152,7 @@ const verifyOtp = async (req, res) => {
  */
 const refreshToken = async (req, res) => {
   const refreshToken = req.cookies?.refreshToken;
+  console.log('🚀 ~ file: twilio.controller.js:154 ~ refreshToken ~ req', req);
 
   if (!refreshToken) {
     return res.status(403).json({
@@ -166,18 +167,18 @@ const refreshToken = async (req, res) => {
   jwt.verify(refreshToken, JWT_REFRESH_TOKEN, (err, phoneNumber) => {
     if (!err) {
       const accessToken = jwt.sign({ phoneNumber }, JWT_AUTH_TOKEN, {
-        expiresIn: '30s',
+        expiresIn: '3m',
       });
 
       return res
         .status(202)
         .cookie('accessToken', accessToken, {
-          expires: new Date(new Date().getTime() + 30 * 1000),
+          expires: new Date(new Date().getTime() + 3000 * 1000),
           sameSite: 'strict',
           httpOnly: true,
         })
         .cookie('authSession', true, {
-          expires: new Date(new Date().getTime() + 30 * 1000),
+          expires: new Date(new Date().getTime() + 3000 * 1000),
         })
         .json({
           message: 'Access Token refreshed',

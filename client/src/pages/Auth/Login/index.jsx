@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginPhone from '../../../components/AuthForm/LoginPhone';
 import OtpForm from '../../../components/AuthForm/Otp';
 
 const REQUEST_URL = process.env.REACT_APP_REQUEST_URL;
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [otpVerifyData, setOtpVerifyData] = useState('');
 
@@ -45,6 +47,11 @@ const LoginPage = () => {
       );
 
       const data = await response.json();
+
+      if (data?.verification === true) {
+        navigate('/');
+      }
+
       console.log('🚀 ~ file: index.jsx:46 ~ handleOtpVerify ~ data', data);
     }
   };
