@@ -1,7 +1,7 @@
 /**
  * @description - Twilio Controller
  * @routes - /twilio/send-sms
- * @dependencies - twilio, dotenv
+ * @dependencies - twilio, dotenv, crypto, jsonwebtoken, cookieParser
  * @env - ACCOUNT_SID, TWILIO_AUTH_TOKEN, JWT_AUTH_TOKEN, JWT_REFRESH_TOKEN
  */
 const ACCOUNT_SID = process.env.ACCOUNT_SID;
@@ -12,13 +12,16 @@ const SMS_SECRET_KEY = process.env.SMS_SECRET_KEY;
 
 const client = require('twilio')(ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+let refreshTokens = [];
 
 /**
- * @function sendOtp - Sending the otp to the entered phone number
- * @route {POST} - /twilio/send-otp
- * @body - phoneNumber
+ * @function `sendOtp` - Sending the otp to the entered phone number
+ * @route `POST` - /twilio/send-otp
+ * @body - `phoneNumber`
  * @description - Takes the {phoneNumber} as {input}, then creates the hash of the {data} using the {SMS_SECRET_KEY}
- * @returns {Object} - {message: "", phoneNumber, otp, fullHash}
+ * @returns {Object} - message: "", phoneNumber, otp, fullHash
  */
 const sendOtp = async (req, res) => {
   const phoneNumber = req.body.phoneNumber;
@@ -61,9 +64,9 @@ const sendOtp = async (req, res) => {
 };
 
 /**
- * @route POST -  /twilio/verify-otp
- * @function sendOtp - Sending the otp to the entered phone number
- * @body - phoneNumber, otp, fullHash
+ * @route `POST` -  /twilio/verify-otp
+ * @function `sendOtp`` - Sending the otp to the entered phone number
+ * @body - `phoneNumber`, `otp`, `fullHash`
  * @description - Takes {phoneNumber, otp} as {input}, getting {fullHash} from the {body}, destructing it, then checking whether {otp} has been entered within {5 minutes} or not, then creating the {hash} and comparing it with the {calculatedHash}
  */
 const verifyOtp = async (req, res) => {
@@ -93,13 +96,43 @@ const verifyOtp = async (req, res) => {
     .digest('hex');
 
   if (calculatedHash === hash) {
-    return res.status(202).json({
-      message: 'OTP is correct',
-      verification: true,
-      phoneNumber,
-      otp,
-      fullHash,
+    /**
+     * @tutorial {shorturl.at/fhGMT} - JWT Flow
+     */
+    // Creating the access token and sending data to the client
+    const accessToken = jwt.sign({ phoneNumber }, JWT_AUTH_TOKEN, {
+      expiresIn: '30s',
     });
+    const refreshToken = jwt.sign({ phoneNumber }, JWT_REFRESH_TOKEN, {
+      expiresIn: '1m',
+    });
+
+    refreshTokens.push(refreshToken);
+    return res
+      .status(202)
+      .cookie('accessToken', accessToken, {
+        expires: new Date(new Date().getTime() + 30 * 1000),
+        sameSite: 'strict',
+        httpOnly: true,
+      })
+      .cookie('authSession', true, {
+        expires: new Date(new Date().getTime() + 30 * 1000),
+      })
+      .cookie('refreshToken', refreshToken, {
+        expires: new Date(new Date().getTime() + 30 * 1000),
+        sameSite: 'strict',
+        httpOnly: true,
+      })
+      .cookie('refreshTokenId', true, {
+        expires: new Date(new Date().getTime() + 30 * 1000),
+      })
+      .json({
+        message: 'OTP is correct',
+        verification: true,
+        phoneNumber,
+        otp,
+        fullHash,
+      });
   } else {
     return res.status(400).json({
       message: 'OTP is wrong',
@@ -111,4 +144,54 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-module.exports = { sendOtp, verifyOtp };
+/**
+ * @route `POST` -  /twilio/refresh-token
+ * @function `refreshToken` - Refreshing the access token
+ * @body `refreshToken`
+ * @description - Takes {`refreshToken`} as {`input`}, then checking whether {refreshToken} is present in the {refreshTokens} array or not, then creating the {accessToken} and sending it to the client
+ */
+const refreshToken = async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(403).json({
+      message: 'Refresh Token not found, please login again',
+    });
+  } else if (!refreshTokens.includes(refreshToken)) {
+    return res.status(403).json({
+      message: 'Refresh Token blocked, please login again',
+    });
+  }
+
+  jwt.verify(refreshToken, JWT_REFRESH_TOKEN, (err, phoneNumber) => {
+    if (!err) {
+      const accessToken = jwt.sign({ phoneNumber }, JWT_AUTH_TOKEN, {
+        expiresIn: '30s',
+      });
+
+      return res
+        .status(202)
+        .cookie('accessToken', accessToken, {
+          expires: new Date(new Date().getTime() + 30 * 1000),
+          sameSite: 'strict',
+          httpOnly: true,
+        })
+        .cookie('authSession', true, {
+          expires: new Date(new Date().getTime() + 30 * 1000),
+        })
+        .json({
+          message: 'Access Token refreshed',
+          phoneNumber,
+          previousSessionExpiry: true,
+          sucess: true,
+        });
+    } else {
+      return res.status(403).json({
+        message: 'Refresh Token is not valid, please login again',
+        success: false,
+      });
+    }
+  });
+};
+
+module.exports = { sendOtp, verifyOtp, refreshToken };
