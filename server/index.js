@@ -6,15 +6,17 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: `.env.local`, override: true });
 
 const app = express();
 
 /**
  * @description - Loading all relevant middlewares
- * @middlewares - cors, morgan, express.json, express.urlencoded
+ * @middlewares - cors, morgan, express.json, express.urlencoded, cookieParser
  */
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(require('./routes/home.route'));
 app.use(require('./routes/stripe.route'));
 app.use(require('./routes/sendgrid.route'));
+app.use('/twilio', require('./routes/twilio.route'));
 app.use('/auth', require('./routes/auth.route'));
 
 /**

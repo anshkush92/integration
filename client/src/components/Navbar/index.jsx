@@ -1,15 +1,36 @@
 import { useState } from 'react';
 
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { NavLink } from 'react-router-dom';
+import isAuthenticated from '../../utils/isAuthenticated';
 
 import Cart from '../Cart';
 
+const REQUEST_URL = process.env.REACT_APP_REQUEST_URL;
+
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isDropdownShown, setIsDropdownShown] = useState(false);
 
+  console.log(
+    '🚀 ~ file: index.jsx:14 ~ Navbar ~ isAuthenticated',
+    isAuthenticated()
+  );
+
   const { totalQuantity } = useSelector((state) => state.cart);
+
+  const handleLogout = async () => {
+    const response = await fetch(`${REQUEST_URL}/auth/logout`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+    console.log('🚀 ~ file: index.jsx:29 ~ handleLogout ~ data', data);
+    navigate('/auth/login', { replace: true });
+  };
 
   const toggleDropdown = () => {
     setIsDropdownShown((previousState) => !previousState);
@@ -84,13 +105,23 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink
-                to="/auth/login"
-                style={({ isActive }) => (isActive ? activeStyle : undefined)}
-                className="navbar-buttons"
-              >
-                OTP Authentication
-              </NavLink>
+              {!isAuthenticated() ? (
+                <NavLink
+                  to="/auth/login"
+                  style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                  className="navbar-buttons"
+                >
+                  Login
+                </NavLink>
+              ) : (
+                <NavLink
+                  onClick={handleLogout}
+                  style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                  className="navbar-buttons"
+                >
+                  Logout
+                </NavLink>
+              )}
             </li>
           </ul>
         </div>
