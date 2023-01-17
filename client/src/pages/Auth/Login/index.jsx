@@ -27,20 +27,22 @@ const LoginPage = () => {
   const handleOtpVerify = async (event, currentOtp) => {
     event.preventDefault();
     setOtpVerifyData({ ...otpVerifyData, otp: parseInt(currentOtp) });
-    console.log(
-      '🚀 ~ file: index.jsx:28 ~ handleOtpVerify ~ otpVerifyData',
-      otpVerifyData
-    );
     if (event.target.id === 'otp-form-back') {
       setIsOtpSend(false);
     } else {
       const response = await fetch(`${REQUEST_URL}/twilio/verify-otp`, {
         method: 'POST',
+        credentials: 'include',
         body: JSON.stringify(otpVerifyData),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+
+      console.log(
+        '🚀 ~ file: index.jsx:28 ~ handleOtpVerify ~ otpVerifyData',
+        otpVerifyData
+      );
 
       const data = await response.json();
       console.log('🚀 ~ file: index.jsx:46 ~ handleOtpVerify ~ data', data);
