@@ -1,7 +1,11 @@
 const router = require('express').Router();
 
-const { sendSms } = require('../controllers/twilio/twilio.controller');
+const {
+  sendOtp,
+  verifyOtp,
+} = require('../controllers/twilio/twilio.controller');
 
-router.post('/twilio/send-sms', sendSms);
+router.post('/twilio/send-otp', sendOtp);
+router.post('/twilio/verify-otp', verifyOtp);
 
 module.exports = router;
