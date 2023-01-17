@@ -1,7 +1,12 @@
 import { useState } from 'react';
 
-const OtpForm = ({ handleOtpVerify }) => {
+const OtpForm = ({ handleOtpVerify, otpVerifyData, setOtpVerifyData }) => {
   const [currentOtp, setCurrentOtp] = useState('');
+
+  const handleOtpChange = (event) => {
+    setCurrentOtp(event.target.value);
+    setOtpVerifyData({ ...otpVerifyData, otp: parseInt(event.target.value) });
+  };
 
   return (
     <div className="w-[35rem]  bg-blue-300 p-4 absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
@@ -14,7 +19,7 @@ const OtpForm = ({ handleOtpVerify }) => {
         <input
           className="input-form mb-4"
           value={currentOtp}
-          onChange={(event) => setCurrentOtp(event.target.value)}
+          onChange={(event) => handleOtpChange(event)}
           id="otp"
         />
 

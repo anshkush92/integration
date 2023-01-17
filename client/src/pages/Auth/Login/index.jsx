@@ -6,6 +6,7 @@ const REQUEST_URL = process.env.REACT_APP_REQUEST_URL;
 
 const LoginPage = () => {
   const [isOtpSend, setIsOtpSend] = useState(false);
+  const [otpVerifyData, setOtpVerifyData] = useState('');
 
   const handleOtpSend = async (event, currentPhoneNumber) => {
     event.preventDefault();
@@ -17,24 +18,43 @@ const LoginPage = () => {
       },
     });
     const data = await response.json();
+    setOtpVerifyData(data);
     console.log('🚀 ~ file: index.jsx:20 ~ handleOtpSend ~ data', data);
 
     setIsOtpSend(true);
   };
 
-  const handleOtpVerify = (event, currentOtp) => {
-    console.log(
-      '🚀 ~ file: index.jsx:16 ~ handleOtpVerify ~ currentOtp',
-      currentOtp
-    );
+  const handleOtpVerify = async (event, currentOtp) => {
     event.preventDefault();
-    if (event.target.id === 'otp-form-back') setIsOtpSend(false);
+    setOtpVerifyData({ ...otpVerifyData, otp: parseInt(currentOtp) });
+    console.log(
+      '🚀 ~ file: index.jsx:28 ~ handleOtpVerify ~ otpVerifyData',
+      otpVerifyData
+    );
+    if (event.target.id === 'otp-form-back') {
+      setIsOtpSend(false);
+    } else {
+      const response = await fetch(`${REQUEST_URL}/twilio/verify-otp`, {
+        method: 'POST',
+        body: JSON.stringify(otpVerifyData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      console.log('🚀 ~ file: index.jsx:46 ~ handleOtpVerify ~ data', data);
+    }
   };
 
   return (
     <div>
       {isOtpSend ? (
-        <OtpForm handleOtpVerify={handleOtpVerify} />
+        <OtpForm
+          handleOtpVerify={handleOtpVerify}
+          otpVerifyData={otpVerifyData}
+          setOtpVerifyData={setOtpVerifyData}
+        />
       ) : (
         <LoginPhone handleOtpSend={handleOtpSend} />
       )}
